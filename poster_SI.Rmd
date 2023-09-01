@@ -25,7 +25,7 @@ library(tidyverse)
 
 ## Fentanyl
 
-```{r}
+```{r echo=FALSE}
 plot_df = read.csv("./Fentanyl/fentanyl_stats.csv")
 plot_df$age <- factor(plot_df$age,
                       levels = c("Neonatal\n(1.2 mcg/hr/kg)",
@@ -54,7 +54,7 @@ print(p1)
 
 ## Midazolam
 
-```{r}
+```{r echo=FALSE}
 plot_df = read.csv("./Midazolam/midazolam_stats.csv")
 plot_df$age <- factor(plot_df$age,
                       levels = c("Neonatal\n(0.04 mcg/hr/kg)",
