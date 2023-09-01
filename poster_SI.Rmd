@@ -1,0 +1,67 @@
+---
+title: "Supplementary Information"
+knit: (function(input_file, encoding) {
+  out_dir <- 'docs';
+  rmarkdown::render(input_file,
+ encoding=encoding,
+ output_file=file.path(dirname(input_file), out_dir, 'poster_SI.html'))})
+author: "Autumn Mcknite"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Load libraries
+
+```{r message=FALSE, warning=FALSE}
+library(tidyverse)
+```
+
+## Fentanyl
+
+```{r}
+plot_df = read.csv("./Fentanyl/fentanyl_stats.csv")
+
+alpha_vals = c(0.99, 0.5, 0.2)
+p1 = plot_df %>%
+  ggplot(aes(age)) +
+  geom_hline(yintercept = c(0.6, 3), linewidth = 2, col = 'lightgrey') +
+  geom_boxplot(
+    aes(ymin = y05, lower = y25, middle = y50, upper = y75, ymax = y95, fill = age),
+    stat = "identity", show.legend = FALSE
+  ) + 
+  scale_y_continuous(expression(Concentration~ng~ml^-1)) +
+  scale_x_discrete("", guide = guide_axis(angle = 45)) +
+  scale_alpha_manual(values = alpha_vals) +
+  theme_bw() +
+  theme(text=element_text(size=14))
+
+print(p1)
+```
+
+## Midazolam
+
+```{r}
+plot_df = read.csv("./Midazolam/midazolam_stats.csv")
+
+alpha_vals = c(0.99, 0.5, 0.2)
+p1 = plot_df %>%
+  ggplot(aes(age)) +
+  geom_hline(yintercept = c(200, 1000), linewidth = 2, col = 'lightgrey') +
+  geom_boxplot(
+    aes(ymin = y05, lower = y25, middle = y50, upper = y75, ymax = y95, fill = age),
+    stat = "identity", show.legend = FALSE
+  ) + 
+  scale_y_continuous(expression(Concentration~ng~ml^-1)) +
+  scale_x_discrete("", guide = guide_axis(angle = 45)) +
+  scale_alpha_manual(values = alpha_vals) +
+  theme_bw() +
+  theme(text=element_text(size=14))
+
+print(p1)
+```
