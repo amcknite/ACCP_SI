@@ -22,10 +22,18 @@ Load libraries
 library(tidyverse)
 ```
 
+
 ## Fentanyl
 
 ```{r}
 plot_df = read.csv("./Fentanyl/fentanyl_stats.csv")
+plot_df$age <- factor(plot_df$age,
+                      levels = c("Neonatal\n(1.2 mcg/hr/kg)",
+                                 "Infant\n(0.6 mcg/hr/kg)",
+                                 "Child\n(0.6 mcg/hr/kg)", 
+                                 "School Age\n(0.6 mcg/hr/kg)",
+                                 "Adolescent\n(0.6 mcg/hr/kg)"))
+
 
 alpha_vals = c(0.99, 0.5, 0.2)
 p1 = plot_df %>%
@@ -48,6 +56,12 @@ print(p1)
 
 ```{r}
 plot_df = read.csv("./Midazolam/midazolam_stats.csv")
+plot_df$age <- factor(plot_df$age,
+                      levels = c("Neonatal\n(0.04 mcg/hr/kg)",
+                                 "Infant\n(0.18 mcg/hr/kg)",
+                                 "Child\n(0.18 mcg/hr/kg)", 
+                                 "School Age\n(0.18 mcg/hr/kg)",
+                                 "Adolescent\n(0.18 mcg/hr/kg)"))
 
 alpha_vals = c(0.99, 0.5, 0.2)
 p1 = plot_df %>%
