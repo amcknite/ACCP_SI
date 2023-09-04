@@ -5,7 +5,8 @@ knit: (function(input_file, encoding) {
   rmarkdown::render(input_file,
  encoding=encoding,
  output_file=file.path(dirname(input_file), out_dir, 'poster_SI.html'))})
-author: "Autumn Mcknite"
+author: 
+  - Autumn Mcknite^[University of Utah, autumn.mcknite@neuro.utah.edu]
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: html_document
 ---
@@ -14,26 +15,18 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Introduction
-
-Load libraries
-
-```{r message=FALSE, warning=FALSE}
+```{r message=FALSE, warning=FALSE, echo=FALSE}
 library(tidyverse)
 ```
 
-
 ## Fentanyl
+
+CRRT-PBPK informed dosing of fentanyl across all ages. Simulated populations of 1000 individuals were created for each age group. Physiological changes due to critical illness were incorporated into the populations by adjusting albumin, hematocrit and residual kidney function based on patient average values. Solid line is the population median and the boxes represent interquartile range. Whiskers indicate 90% prediction intervals. A target therapeutic concentration of 0.5 – 3 ng/ml is denoted by the solid grey lines. Model acceptance was reached when greater than 90% of the simulated population of children undergoing CRRT fell within the therapeutic range for the selected dose. AFE and AAFE were used to determine model bias and accuracy. 
+
+Standard dosing of fentanyl for sedation is 0.5-3 mcg/kg/hr  for all other age groups. Our model informed dosing determined that standard dosing of fentanyl should achieve therapeutic concentrations in all ages of children undergoing CRRT.
 
 ```{r echo=FALSE}
 plot_df = read.csv("./Fentanyl/fentanyl_stats.csv")
-plot_df$age <- factor(plot_df$age,
-                      levels = c("Neonatal\n(1.2 mcg/hr/kg)",
-                                 "Infant\n(0.6 mcg/hr/kg)",
-                                 "Child\n(0.6 mcg/hr/kg)", 
-                                 "School Age\n(0.6 mcg/hr/kg)",
-                                 "Adolescent\n(0.6 mcg/hr/kg)"))
-
 
 alpha_vals = c(0.99, 0.5, 0.2)
 p1 = plot_df %>%
@@ -54,14 +47,12 @@ print(p1)
 
 ## Midazolam
 
+CRRT-PBPK informed dosing of midazolam across all ages. Simulated populations of 1000 individuals were created for each age group. Physiological changes due to critical illness were incorporated into the populations by adjusting albumin, hematocrit and residual kidney function based on patient average values. Solid line is the population median and the boxes represent interquartile range. Whiskers indicate 90% prediction intervals. A target therapeutic concentration of 200-1000 ng/ml is denoted by the solid grey lines. Model acceptance was reached when greater than 90% of the simulated population of children undergoing CRRT fell within the therapeutic range for the selected dose. AFE and AAFE were used to determine model bias and accuracy. 
+
+Standard dosing of midazolam for sedation is 0.015 - 0.06 mg/kg/hr  for neonates 30 weeks gestational age or older and 0.05 – 0.12 mg/kg/hr all other age groups. Our model informed dosing determined that standard dosing of midazolam should achieve therapeutic concentrations in all ages of children undergoing CRRT. The model informed dosing for neonates did not meet acceptance criteria of 90% or greater of individuals within the population reaching therapeutic concentrations. Only 75% of the population reached therapeutic concentrations at 0.04 mg/kg/hr. Model informed dosing for all other age groups fell within standard dosing ranges. 
+
 ```{r echo=FALSE}
 plot_df = read.csv("./Midazolam/midazolam_stats.csv")
-plot_df$age <- factor(plot_df$age,
-                      levels = c("Neonatal\n(0.04 mcg/hr/kg)",
-                                 "Infant\n(0.18 mcg/hr/kg)",
-                                 "Child\n(0.18 mcg/hr/kg)", 
-                                 "School Age\n(0.18 mcg/hr/kg)",
-                                 "Adolescent\n(0.18 mcg/hr/kg)"))
 
 alpha_vals = c(0.99, 0.5, 0.2)
 p1 = plot_df %>%
@@ -78,4 +69,31 @@ p1 = plot_df %>%
   theme(text=element_text(size=14))
 
 print(p1)
+```
+
+## Fluconazole
+
+CRRT-PBPK informed dosing of fluconazole across all ages. Simulated populations of 1000 individuals were created for each age group. Physiological changes due to critical illness were incorporated into the populations by adjusting albumin, hematocrit and residual kidney function based on patient average values. Solid line is the population median and the boxes represent interquartile range. Whiskers indicate 90% prediction intervals. A target therapeutic AUC of > 400 mg hour/L is denoted by the solid grey lines. Model acceptance was reached when greater than 90% of the simulated population of children undergoing CRRT fell within the therapeutic range for the selected dose. AFE and AAFE were used to determine model bias and accuracy. 
+
+Standard dosing of fluconazole for susceptible infections is 12mg/kg daily for neonates and 3-12 mg/kg per day for all other age groups. Dosing of 6-12mg/kg daily may be used for older children and adolescents undergoing CRRT. Our model informed dosing determined that 20mg/kg for neonates, 10mg/kg for infants to School Age and 5.5mg/kg for adolescents was adequate to achieve therapeutic concentration. This model informed dosing suggests a higher dose of fluconazole may be required for neonates. 
+
+
+```{r echo=FALSE}
+plot_df = read.csv("./Fluconazole/fluconazole_stats.csv")
+
+alpha_vals = c(0.99, 0.5, 0.2)
+p3 = plot_df %>%
+  ggplot(aes(age)) +
+  geom_hline(yintercept = c(400, 1600), linewidth = 2, col = 'lightgrey') +
+  geom_boxplot(
+    aes(ymin = y05, lower = y25, middle = y50, upper = y75, ymax = y95, fill = age),
+    stat = "identity", show.legend = FALSE
+  ) + 
+  scale_y_continuous(expression(AUC[0-24])) +
+  scale_x_discrete("", guide = guide_axis(angle = 45)) +
+  scale_alpha_manual(values = alpha_vals) +
+  theme_bw() +
+  theme(text=element_text(size=14))
+
+print(p3)
 ```
